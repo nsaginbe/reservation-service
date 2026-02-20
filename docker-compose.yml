@@ -1,0 +1,37 @@
+version: "3.9"
+
+
+networks:
+  default: {}
+
+x-shared-environment: &shared-environment
+  ENV: "DEV"
+  ACCESS_TOKENS: '["test"]'
+  API_VERSION: "v1"
+  BNOVO_EMAIL: "${BNOVO_EMAIL}"
+  BNOVO_PASSWORD: "${BNOVO_PASSWORD}"
+
+x-base-image: &base-image
+  restart: unless-stopped
+  environment:
+    <<: *shared-environment
+  networks:
+    default: {}
+  logging:
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  app: &app
+    <<: *base-image
+    hostname: app
+    container_name: app
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: app
+    ports:
+      - 8002:8002
+    volumes:
+      - ./src:/app/src

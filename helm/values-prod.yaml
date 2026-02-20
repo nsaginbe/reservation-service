@@ -1,0 +1,76 @@
+global:
+  environments:
+    ENV: "PRODUCTION"
+    API_VERSION: "v1"
+    GUNICORN_WORKERS: "2"
+    GUNICORN_TIMEOUT: "300"
+
+  secrets:
+    bnovo:
+      ACCESS_TOKENS: ACCESS_TOKENS
+      BNOVO_EMAIL: BNOVO_EMAIL
+      BNOVO_PASSWORD: BNOVO_PASSWORD
+
+istio:
+  destinationRules:
+  - host: bnovo-parser
+    subsets:
+    - name: latest
+      version: latest
+
+services:
+- name: bnovo-parser
+  target:
+    app: bnovo-parser
+  ports:
+  - name: http-main
+    port: 8002
+    targetPort: 8002
+
+apps:
+- name: bnovo-parser
+  version: latest
+
+  serviceAccount: bnovo-parser-sa
+
+  deployment:
+    replicas: 1
+    ports:
+    - portName: http-main
+      servicePort: 8002  # set the service port (used by ingress)
+      containerPort: 8002  # set the port mapping
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 128m
+      limits:
+        memory: 300Mi
+        cpu: 256m
+    probes:
+      readiness:
+        tcpSocket:
+          port: 8002
+        initialDelaySeconds: 60
+        periodSeconds: 10
+      liveness:
+        tcpSocket:
+          port: 8002
+        initialDelaySeconds: 90
+        periodSeconds: 20
+  # !!! Uncomment: configure autoscaling
+  # autoscaling:
+  #   minReplicas: 1
+  #   maxReplicas: 10
+  #   metrics:
+  #   - type: Resource
+  #     resource:
+  #       name: cpu
+  #       target:
+  #         type: Utilization
+  #         averageUtilization: 200
+  #   - type: Resource
+  #     resource:
+  #       name: memory
+  #       target:
+  #         type: Utilization
+  #         averageUtilization: 200

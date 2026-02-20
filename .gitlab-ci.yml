@@ -1,0 +1,62 @@
+include:
+- project: 'moonai/ci-templates'
+  ref: main
+  file: 'workflow.gitlab-ci.yml'
+- project: 'moonai/ci-templates'
+  ref: main
+  file: 'build-docker.gitlab-ci.yml'
+- project: 'moonai/ci-templates'
+  ref: main
+  file: 'docker.gitlab-ci.yml'
+- project: 'moonai/ci-templates'
+  ref: main
+  file: 'optimizations.gitlab-ci.yml'
+- template: Security/SAST.gitlab-ci.yml
+
+prepare:
+  stage: prepare
+  extends:
+    - .build-docker
+  environment: prepare/$CI_COMMIT_REF_SLUG
+  variables:
+    BUILDER_DOCKERFILE: docker/Dockerfile
+    BUILDER_DOCKERFILE_TARGET: dev
+    BUILDER_DOCKER_IMAGE_TAGS: ci-$CI_COMMIT_REF_SLUG
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+check:
+  stage: check
+  environment: check/$CI_COMMIT_REF_SLUG
+  image: ${CI_YC_CR_HOST}/${CI_PROJECT_PATH}:ci-$CI_COMMIT_REF_SLUG
+  script:
+    - make format_check
+    - make static
+    - make test_coverage
+  coverage: '/TOTAL\s+\d+\s+\d+\s+(\d+%)/'
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+sast:
+  stage: check
+
+semgrep-sast:
+  stage: check
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+build-docker:
+  variables:
+    BUILDER_DOCKERFILE: "docker/Dockerfile"
+    BUILDER_DOCKERFILE_TARGET: "app"
+
+deploy-helm:
+  rules:
+  - if: '$CI_COMMIT_BRANCH == "main"'
+    variables:
+      DEPLOYER_HELM_NAMESPACE: "moonai-parsers"
+      DEPLOYER_HELM_VALUES: "helm/values-prod.yaml"
+    when: manual
+  - when: never

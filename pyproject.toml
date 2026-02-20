@@ -1,0 +1,55 @@
+[project]
+name = "project"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Azamat Bakyztahn", email = "unawares15@gmail.com" }
+]
+readme = "README.md"
+
+[project.scripts]
+moon-cli = "cli.__main__:main"
+
+[tool.poetry]
+package-mode = false
+packages = [
+    { include = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+requests = "^2.32.3"
+pydantic-settings = "^2.9.1"
+sqlalchemy = "^2.0.40"
+alembic = "^1.15.2"
+psycopg2-binary = "^2.9.10"
+asyncpg = "^0.30.0"
+fastapi = "^0.116.1"
+uvicorn = "^0.35.0"
+gevent = "^25.5.1"
+celery = "^5.5.3"
+redis = "^6.2.0"
+oauthlib = "^3.3.0"
+python-multipart = "^0.0.20"
+gunicorn = "^23.0.0"
+playwright = "^1.57.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.15.0"
+isort = "^6.0.1"
+black = "^25.1.0"
+semgrep = "^1.121.0"
+safety = "^3.4.0"
+flake8 = "^7.2.0"
+pytest-cov = "^6.1.1"
+types-requests = "^2.32.0.20250328"
+types-pyyaml = "^6.0.12.20250402"
+types-croniter = "^6.0.0.20250411"
+types-pytz = "^2025.2.0.20250516"
+
+[tool.black]
+line-length = 100
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

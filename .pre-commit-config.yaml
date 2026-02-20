@@ -1,0 +1,55 @@
+# See https://pre-commit.com for more information
+default_language_version:
+  # default language version for each language used in the repository
+  python: python3.13
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      # See https://pre-commit.com/hooks.html for more hooks
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: name-tests-test
+      - id: trailing-whitespace
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-yaml
+        exclude: (helm_chart/.*|.gitlab-ci.yml)
+      - id: detect-private-key
+  - repo: local
+    hooks:
+      - id: format_check
+        name: make format_check
+        entry: make format_check
+        language: system
+        stages: [commit]
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: static
+        name: make static
+        entry: make static
+        language: system
+        stages: [commit]
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: test
+        name: make test
+        entry: make test
+        language: system
+        stages: [commit]
+        pass_filenames: false
+  - repo: local
+    hooks:
+      - id: scan
+        name: make scan
+        entry: make scan
+        language: system
+        stages: [commit]
+        pass_filenames: false
