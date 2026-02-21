@@ -31,7 +31,7 @@ async def fetch_rooms(
     dto: date,
     adults: int,
     children: str,
-    timeout_ms: int = 10000,
+    timeout_ms: int = 20000,
 ) -> Dict[str, Any]:
     url = build_search_url(dfrom=dfrom, dto=dto, adults=adults, children=children)
     rooms_payload: List[Dict[str, Any]] = []
