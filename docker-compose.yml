@@ -8,8 +8,6 @@ x-shared-environment: &shared-environment
   ENV: "DEV"
   ACCESS_TOKENS: '["test"]'
   API_VERSION: "v1"
-  BNOVO_EMAIL: "${BNOVO_EMAIL}"
-  BNOVO_PASSWORD: "${BNOVO_PASSWORD}"
 
 x-base-image: &base-image
   restart: unless-stopped

@@ -1,5 +1,3 @@
-import os
-
 import pydantic_settings
 from dotenv import load_dotenv
 
@@ -10,11 +8,6 @@ class Config(pydantic_settings.BaseSettings):
     ACCESS_TOKENS: list[str] = ["test"]
     API_VERSION: str = "v1"
     ALLOWED_HOSTS: list[str] = ["*"]
-
-    BNOVO_EMAIL: str = os.getenv("BNOVO_EMAIL", "")
-    BNOVO_PASSWORD: str = os.getenv("BNOVO_PASSWORD", "")
-    HEADLESS: bool = True
-    TIMEOUT_MS: int = 40000
 
     model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",
