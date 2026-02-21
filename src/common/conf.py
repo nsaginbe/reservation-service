@@ -9,6 +9,8 @@ class Config(pydantic_settings.BaseSettings):
     API_VERSION: str = "v1"
     ALLOWED_HOSTS: list[str] = ["*"]
 
+    HEADLESS: bool = True
+
     model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

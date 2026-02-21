@@ -6,6 +6,8 @@ from urllib.parse import urlencode
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
 
+from common import conf
+
 PROPERTY_ID = "e6b334f6-caac-4dd8-8e6f-b8bfa578a484"
 BASE_URL = f"https://reservationsteps.ru/rooms/index/{PROPERTY_ID}"
 
@@ -36,7 +38,7 @@ async def fetch_rooms(
 
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(
-            headless=False,
+            headless=conf.HEADLESS,
             args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
         )
         context = await browser.new_context()

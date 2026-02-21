@@ -21,10 +21,10 @@ x-base-image: &base-image
       max-file: "3"
 
 services:
-  app: &app
+  app:
     <<: *base-image
     hostname: app
-    container_name: app
+    container_name: reservation-service
     build:
       context: .
       dockerfile: docker/Dockerfile
